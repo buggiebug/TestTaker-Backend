@@ -12,12 +12,12 @@ const {
   getAllUsers,
   getSingleUserDetails,
   deleteUser,
-} = require("../Controllers/adminController");
+} = require("../controllers/adminController");
 
 const {
   isAuthenticatedAdmin,
   authorizedAdminRoles,
-} = require("../Middleware/authentication");
+} = require("../middleware/authentication");
 
 router.route("/new-admin").post(newAdmin);
 router.route("/login").post(loginAdmin);

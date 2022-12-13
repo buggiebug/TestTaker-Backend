@@ -9,9 +9,9 @@ const {
   getUserDetails,
   updateUserPassword,
   updateUserProfile,
-} = require("../Controllers/userController");
+} = require("../controllers/userController");
 
-const { isAuthenticatedUser } = require("../Middleware/authentication");
+const { isAuthenticatedUser } = require("../middleware/authentication");
 
 router.route("/new-user").post(registerUser);
 router.route("/login").post(loginUser);

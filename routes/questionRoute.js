@@ -1,8 +1,8 @@
 const express = require('express')
 const router = express.Router();
 
-const { getAllQuestions, createQuestion, updateQuestion, deleteQuestion, getAquestion } = require('../Controllers/questionsController');
-const { isAuthenticatedAdmin,authorizedAdminRoles } = require('../Middleware/authentication');
+const { getAllQuestions, createQuestion, updateQuestion, deleteQuestion, getAquestion } = require('../controllers/questionsController');
+const { isAuthenticatedAdmin,authorizedAdminRoles } = require('../middleware/authentication');
 
 router.route('/questions').get(getAllQuestions);
 router.route('/admin/questions/new').post(isAuthenticatedAdmin,authorizedAdminRoles("admin"),createQuestion);
