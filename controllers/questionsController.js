@@ -33,7 +33,7 @@ exports.createQuestion = catchAsyncError(async (req, res) => {
 //  //! ------------ Get all Questions ------------
 exports.getAllQuestions = catchAsyncError(async (req, res, next) => {
   const searchFeature = new SearchFeature(
-    QuestionsModel.find(),
+    QuestionsModel.find({}).sort({ _id: -1 }),
     req.query
   ).filterByQuestionType();
   const questions = await searchFeature.query;

@@ -3,6 +3,7 @@ const UserModel = require("../models/userModel");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require("../utils/errorHandler");
 const { sendAdminToken } = require("../utils/getJWTtoken");
+const questionModels = require("../models/questionModels");
 
 //  //! -------------- New Admin  --------------------
 exports.newAdmin = catchAsyncError(async (req, res, next) => {
@@ -40,7 +41,16 @@ exports.loginAdmin = catchAsyncError(async (req, res, next) => {
 // //! --------------------- Get Admin Details ---------------------
 exports.getsAdminDetails = catchAsyncError(async (req, res, next) => {
   const admin = req.admin;
-  return res.status(200).json({ success: true, admin });
+  const allAdminsCount = await AdminModel.countDocuments();
+  const allUsersCount = await UserModel.countDocuments();
+  const questionCount = await questionModels.countDocuments();
+  let adminData;
+  if(admin.role === "admin"){
+    adminData = { admin, allAdminsCount, allUsersCount, questionCount };
+  }else{
+    adminData = { admin, allAdminsCount:0, allUsersCount:0, questionCount };
+  }
+  return res.status(200).json({ success: true, adminData });
 });
 
 //  //! ------------------- Update Admin Password -----------------
@@ -82,17 +92,17 @@ exports.getSingleSubAdmins = catchAsyncError(async (req, res, next) => {
 
 //  //! ------------------- Update Sub-Admin Role -----------------
 exports.updateAdminRole = catchAsyncError(async (req, res, next) => {
-  const { newRole } = req.body;
+  const { role } = req.body;
   const { id } = req.params;
-  if (!newRole) {
+  if (!role) {
     return next(new ErrorHandler(401, "Fields can't be empty"));
   }
   if (id === req.admin.id) {
     return next(new ErrorHandler(401, "You can't update yourself"));
   }
-  await AdminModel.findByIdAndUpdate(id, { role: newRole });
+  await AdminModel.findByIdAndUpdate(id, { role });
   const adminData = await AdminModel.findById(id);
-  return res.status(200).json({ success: true, adminData });
+  return res.status(200).json({ success: true, adminData,message:"Role Updated" });
 });
 
 //  //! ----------------- Delete Sub-Admin -----------------
@@ -115,7 +125,7 @@ exports.deleteSubAdmin = catchAsyncError(async (req, res, next) => {
 
 //  //? ---------- All Users ----------
 exports.getAllUsers = catchAsyncError(async (req, res, next) => {
-  const allUsers = await UserModel.find({});
+  const allUsers = await UserModel.find({}).sort({ _id: -1 });
   return res.status(200).json({ success: true, allUsers });
 });
 
@@ -139,5 +149,7 @@ exports.deleteUser = catchAsyncError(async (req, res, next) => {
     );
   }
   await user.remove();
-  return res.status(200).json({ success: true, message: `${user.email}, is Deleted` });
+  return res
+    .status(200)
+    .json({ success: true, message: `${user.email}, is Deleted` });
 });
