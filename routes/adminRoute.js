@@ -19,6 +19,7 @@ const {
   authorizedAdminRoles,
 } = require("../middleware/authentication");
 
+
 router.route("/new-admin").post(isAuthenticatedAdmin,authorizedAdminRoles("admin"),newAdmin);
 router.route("/login").post(loginAdmin);
 router.route("/profile").get(isAuthenticatedAdmin, getsAdminDetails);
