@@ -17,7 +17,7 @@ exports.createQuestion = catchAsyncError(async (req, res) => {
   } = req.body;
   const admin = req.admin.id;
   const questions = await QuestionsModel.create({
-    questionCategory : questionCategory.charAt(0).toUpperCase() + questionCategory.slice(1),
+    questionCategory : String(questionCategory.charAt(0).toUpperCase() + questionCategory.slice(1)).replace(/\s+/g,' ').trim(),
     questionType,
     questionName,
     option_1,
