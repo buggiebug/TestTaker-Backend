@@ -2,7 +2,7 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../models/userModel");
 const { sendToken } = require("../utils/getJWTtoken");
-const { sendForgotPasswordEmail } = require("../utils/sendForgotPasswordEmail");
+const { sendForgotPasswordEmail,sendMarksMail } = require("../utils/sendForgotPasswordEmail");
 
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
@@ -163,4 +163,11 @@ exports.updateUserProfile = catchAsyncError(async (req, res, next) => {
     useFindAndModify: false,
   });
   return res.status(200).json({ success: true, user });
+});
+
+
+exports.sendMarks = catchAsyncError(async(req,res,next)=>{
+  const {subjectName,userMailState,count,ansState} = req.body;
+  await sendMarksMail(subjectName,userMailState,count,ansState)
+  return res.status(200).json({success:true,message:"Mail sended"});
 });

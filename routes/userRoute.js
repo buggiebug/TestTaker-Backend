@@ -9,6 +9,7 @@ const {
   getUserDetails,
   updateUserPassword,
   updateUserProfile,
+  sendMarks
 } = require("../controllers/userController");
 
 const { isAuthenticatedUser } = require("../middleware/authentication");
@@ -21,5 +22,6 @@ router.route("/user/password/reset/:token").put(resetPassword);
 router.route("/user/me").get(isAuthenticatedUser, getUserDetails);
 router.route("/user/password/update").put(isAuthenticatedUser, updateUserPassword);
 router.route("/user/me/update").put(isAuthenticatedUser, updateUserProfile);
+router.route("/user/send-marks").post(sendMarks);
 
 module.exports = router;
