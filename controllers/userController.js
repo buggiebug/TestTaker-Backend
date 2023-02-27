@@ -2,7 +2,7 @@ const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../models/userModel");
 const { sendToken } = require("../utils/getJWTtoken");
-const { sendForgotPasswordEmail,sendMarksMail } = require("../utils/sendForgotPasswordEmail");
+const { sendForgotPasswordEmail,sendMarksMail } = require("../utils/sendMail");
 
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
