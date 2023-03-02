@@ -23,7 +23,7 @@ exports.sendForgotPasswordEmail = async (options) => {
   await transporter.sendMail(mailOptions)
 };
 
-exports.sendMarksMail = async (subjectName,userMailState,count,ansState) => {
+exports.sendMarksMail = async (subjectName,userMailState,count,ansState,timeMinState,timeSecState) => {
   const transporter = nodeMailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -64,6 +64,7 @@ exports.sendMarksMail = async (subjectName,userMailState,count,ansState) => {
     to: userMailState,
     subject: `${subjectName} test result.`,
     html:`<h1>You Scored: &nbsp;${count}/${totalMarks}</h1>
+          <h3>Time: ${timeMinState}:${timeSecState} sec</h3>
     ${str}`
   };
   await transporter.sendMail(mailOptions)

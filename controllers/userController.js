@@ -167,7 +167,7 @@ exports.updateUserProfile = catchAsyncError(async (req, res, next) => {
 
 
 exports.sendMarks = catchAsyncError(async(req,res,next)=>{
-  const {subjectName,userMailState,count,ansState} = req.body;
-  await sendMarksMail(subjectName,userMailState,count,ansState)
+  const {subjectName,userMailState,count,ansState,timeMinState,timeSecState} = req.body;
+  await sendMarksMail(subjectName,userMailState,count,ansState,timeMinState,timeSecState)
   return res.status(200).json({success:true,message:"Mail sended"});
 });
