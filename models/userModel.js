@@ -11,6 +11,10 @@ const userSchema = new mongoose.Schema({
     minLength: [3, "Name should be atleast 5 characters long"],
     maxLength: [30, "Name should no be grater than 30 characters long"],
   },
+  phone: {
+    type: String,
+    default: "0",
+  },
   email: {
     type: String,
     required: [true, "Please enter your email"],
@@ -23,20 +27,10 @@ const userSchema = new mongoose.Schema({
     minLength: [8, "Passwords must be at least 8 characters long"],
     select: false,
   },
-  avatar: {
-    public_id: {
-      type: String,
-    },
-    url: {
-      type: String,
-    },
-  },
   accountCreatedAt: {
     type: Date,
     default: new Date(),
   },
-  resetPasswordToken: String,
-  resetPasswordExpire: Date,
 });
 
 // Encrypt the password...
@@ -73,4 +67,4 @@ userSchema.methods.getResetPasswordToken = async function () {
   return resetToken;
 };
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("users", userSchema);
