@@ -12,9 +12,13 @@ const jwt = require("jsonwebtoken");
 exports.registerUser = catchAsyncError(async (req, res, next) => {
   const { name, email, phone, password } = req.body;
   //console.log(req.body)
+  const isUser = await User.findOne({ email: String(email).trim().toLowerCase() })
+  if (isUser) {
+    return next(new ErrorHandler(401, "Already registered."));
+  }
   const newUser = await User.create({
     name,
-    email: email.toLowerCase(),
+    email: String(email).trim().toLowerCase(),
     phone,
     password,
   });
@@ -28,7 +32,7 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
   if (!email || !password) {
     return next(new ErrorHandler(404, "Enter email & password"));
   }
-  const userPass = await User.findOne({ email: email.toLowerCase() }).select(
+  const userPass = await User.findOne({ email: String(email).trim().toLowerCase() }).select(
     "+password"
   );
   if (!userPass) {
@@ -62,7 +66,7 @@ exports.logoutUser = catchAsyncError(async (req, res, next) => {
 //  //! ------------------ Send Forgot Password Mail ------------------
 exports.forgotPassword = catchAsyncError(async (req, res, next) => {
   const { email } = req.body;
-  const user = await User.findOne({ email: email.toLowerCase() });
+  const user = await User.findOne({ email: String(email).trim().toLowerCase() });
   if (!user) {
     return next(new ErrorHandler(404, "User not found"));
   }
