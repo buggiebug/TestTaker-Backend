@@ -11,10 +11,11 @@ const jwt = require("jsonwebtoken");
 //  //! ---------------- New User ----------------
 exports.registerUser = catchAsyncError(async (req, res, next) => {
   const { name, email, phone, password } = req.body;
+  //console.log(req.body)
   const newUser = await User.create({
     name,
-    phone,
     email: email.toLowerCase(),
+    phone,
     password,
   });
   const user = await User.findById(newUser._id);
