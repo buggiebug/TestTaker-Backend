@@ -17,7 +17,11 @@ exports.createQuestion = catchAsyncError(async (req, res) => {
   } = req.body;
   const admin = req.admin.id;
   const questions = await QuestionsModel.create({
-    questionCategory : String(questionCategory.charAt(0).toUpperCase() + questionCategory.slice(1)).replace(/\s+/g,' ').trim(),
+    questionCategory: String(
+      questionCategory.charAt(0).toUpperCase() + questionCategory.slice(1)
+    )
+      .replace(/\s+/g, " ")
+      .trim(),
     questionType,
     questionName,
     option_1,
@@ -30,22 +34,45 @@ exports.createQuestion = catchAsyncError(async (req, res) => {
   return res.status(201).json({ success: true, questions });
 });
 
+//  //! Get all subjects name...
+exports.allSubjectsName = catchAsyncError(async (req, res, next) => {
+  const allSubject = await QuestionsModel.find({})
+    .sort({ _id: -1 })
+    .select("questionCategory");
+  let temp = await allSubject.map((e) => {
+    return e.questionCategory;
+  });
+  const subjects = new Set(temp);
+  const totalSubjects = [];
+  for (let el of subjects) totalSubjects.push(el);
+  const totalSubjectCount = totalSubjects.length;
+  return res
+    .status(200)
+    .json({ success: true, totalSubjectCount, totalSubjects });
+});
+
+//  //! Search by subject name...
+exports.searchBySubjectName = catchAsyncError(async (req, res, next) => {
+  const { subject } = req.params;
+  const allQuestions = await QuestionsModel.find({questionCategory: { $regex: new RegExp(subject, 'i') }}).sort({ _id: -1 });
+  return res.status(200).json({ success: true,totalQuestions:allQuestions.length, allQuestions });
+});
+
 //  //! ------------ Get all Questions ------------
 exports.getAllQuestions = catchAsyncError(async (req, res, next) => {
   const searchFeature = new SearchFeature(
-    QuestionsModel.find({}).sort({ _id: -1 }),
+    QuestionsModel.find().sort({ _id: -1 }),
     req.query
   ).filterByQuestionType();
   const questions = await searchFeature.query;
 
   //  Count documents by iteration...
   let questionsCount = 0;
-  for(let i=0;i<questions.length;i++)
-    questionsCount++;
-  return res.status(200).json({ success: true, questionsCount,questions });
+  for (let i = 0; i < questions.length; i++) questionsCount++;
+  return res.status(200).json({ success: true, questionsCount, questions });
 });
 
-//  //! ------------ Get a Question ------------
+//  //! ------------ Get a Question by id ------------
 exports.getAquestion = catchAsyncError(async (req, res, next) => {
   const questions = await QuestionsModel.findById(req.params.id);
   if (!questions) {
