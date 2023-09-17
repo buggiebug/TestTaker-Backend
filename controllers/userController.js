@@ -1,17 +1,19 @@
 const ErrorHandler = require("../utils/errorHandler");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const User = require("../models/userModel");
+const TestModel = require("../models/testModel");
 const { sendToken } = require("../utils/getJWTtoken");
-const { sendForgotPasswordEmail,sendMarksMail } = require("../utils/sendMail");
+const { sendForgotPasswordEmail, sendMarksMail } = require("../utils/sendMail");
 
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
 //  //! ---------------- New User ----------------
 exports.registerUser = catchAsyncError(async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, email, phone, password } = req.body;
   const newUser = await User.create({
     name,
+    phone,
     email: email.toLowerCase(),
     password,
   });
@@ -165,9 +167,51 @@ exports.updateUserProfile = catchAsyncError(async (req, res, next) => {
   return res.status(200).json({ success: true, user });
 });
 
+//  //! Save test & send to the mail...
+exports.submitMyTest = catchAsyncError(async (req, res, next) => {
+  const {
+    subjectName,
+    userMailState,
+    ansState,
+    timeMinState,
+    timeSecState,
+  } = req.body;
 
-exports.sendMarks = catchAsyncError(async(req,res,next)=>{
-  const {subjectName,userMailState,count,ansState,timeMinState,timeSecState} = req.body;
-  await sendMarksMail(subjectName,userMailState,count,ansState,timeMinState,timeSecState)
-  return res.status(200).json({success:true,message:"Mail sended"});
+  let totalMarks = 0, count=0;
+  const answers = [];
+  await ansState.forEach((e) => {
+    answers.push(e);
+    if(String(e.right_Answer) === String(e.yourAnswer))
+      count++;
+    totalMarks++;
+  });
+
+  try {
+    await TestModel.create({
+      subjectName: subjectName,
+      mailTo: String(userMailState).toLowerCase(),
+      marks: { total: totalMarks, gain: count },
+      timeTaken: { timeMin: timeMinState, timeSec: timeSecState },
+      answers,
+    });
+    await sendMarksMail(
+      subjectName,
+      userMailState,
+      count,
+      ansState,
+      timeMinState,
+      timeSecState
+    );
+    return res
+      .status(200)
+      .json({ success: true, message: "You are doing well. 👌" });
+  } catch (err) {
+    return next(new ErrorHandler(400, err.message));
+  }
+});
+
+//  //! My All tests...
+exports.getAllTest = catchAsyncError(async (req, res, next) => {
+  const allTests = await TestModel.find({ mailTo: req.user.email });
+  return res.status(200).json({ success: true, allTests });
 });
