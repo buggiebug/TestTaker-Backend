@@ -3,14 +3,14 @@ const nodeMailer = require("nodemailer");
 exports.sendForgotPasswordEmail = async (options) => {
   const transporter = nodeMailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
+    port: 465,
     service: "gmail",
     secure:true,
     auth: {
       user: process.env.SENDER_EMAIL,
       pass: process.env.SENDER_PASS,
     },
-    logger:true
+    // logger:true
   });
 
   const mailOptions = {
@@ -26,14 +26,14 @@ exports.sendForgotPasswordEmail = async (options) => {
 exports.sendMarksMail = async (subjectName,userMailState,count,ansState,timeMinState,timeSecState) => {
   const transporter = nodeMailer.createTransport({
     host: "smtp.gmail.com",
-    port: 587,
+    port: 465,
     service: "gmail",
     secure:true,
     auth: {
       user: process.env.SENDER_EMAIL,
       pass: process.env.SENDER_PASS,
     },
-    logger:true
+    // logger:true
   });
 
   //  Design HTML file which shows in mail...
