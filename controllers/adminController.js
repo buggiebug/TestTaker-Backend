@@ -170,5 +170,5 @@ exports.viewTestTakenByUsers = catchAsyncError(async(req,res,next)=>{
   const testTakenByUsers = await TestModel.find({_id:id});
   if(!testTakenByUsers)
     return next(new ErrorHandler(401,"Invalid I'd."));
-  return res.status(200).json({success:true,testTakenByUsers})
+  return res.status(200).json({success:true,testTakenByUsers:testTakenByUsers[0].answers})
 })
