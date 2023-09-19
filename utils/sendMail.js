@@ -48,8 +48,8 @@ exports.sendMarksMail = async (subjectName,userMailState,count,ansState,timeMinS
         <p>2. &nbsp;&nbsp; ${e.option_2} </p>
         <p>3. &nbsp;&nbsp; ${e.option_3} </p>
         <p>4. &nbsp;&nbsp; ${e.option_4} </p>
-        <p style="color: orange">Your Ans. &nbsp;&nbsp; ${e.yourAnswer} </p>
-        <p style="color: green"><strong>Rigth Ans. &nbsp;&nbsp; ${e.right_Answer}</strong></p>
+        <p style="color: orange">You Answered. &nbsp;&nbsp; ${e.yourAnswer} </p>
+        <p style="color: green"><strong>Right Answer. &nbsp;&nbsp; ${e.right_Answer}</strong></p>
       </div>
       <br/>
       <hr/>
@@ -62,8 +62,8 @@ exports.sendMarksMail = async (subjectName,userMailState,count,ansState,timeMinS
   const mailOptions = {
     from: process.env.SENDER_EMAIL,
     to: String(userMailState),
-    subject: `${subjectName} test result.`,
-    html:`<h1>You Scored: &nbsp;${count}/${totalMarks}</h1>
+    subject: `Your test card by TestTaker.`,
+    html:`<h1>${subjectName} test result.<br/><br/>You Scored: &nbsp;${count}/${totalMarks}</h1>
           <h3>Time: ${timeMinState}:${timeSecState} sec</h3>
     ${str}`
   };
