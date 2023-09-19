@@ -12,6 +12,8 @@ const {
   getAllUsers,
   getSingleUserDetails,
   deleteUser,
+  testTakenByUsers,
+  viewTestTakenByUsers
 } = require("../controllers/adminController");
 
 const {
@@ -65,5 +67,9 @@ router
     getSingleUserDetails
   )
   .delete(isAuthenticatedAdmin, authorizedAdminRoles("admin"), deleteUser);
+
+//  //? -------- Test Taken By Users --------
+router.route("/users/testtaken").get(isAuthenticatedAdmin, authorizedAdminRoles("admin"), testTakenByUsers);
+router.route("/users/testtaken/:id").get(isAuthenticatedAdmin, authorizedAdminRoles("admin"), viewTestTakenByUsers);
 
 module.exports = router;
