@@ -1,5 +1,6 @@
 const AdminModel = require("../models/adminModel");
 const UserModel = require("../models/userModel");
+const TestModel = require("../models/testModel");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require("../utils/errorHandler");
 const { sendAdminToken } = require("../utils/getJWTtoken");
@@ -153,3 +154,21 @@ exports.deleteUser = catchAsyncError(async (req, res, next) => {
     .status(200)
     .json({ success: true, message: `${user.email}, is Deleted` });
 });
+
+// //? ---------- Test Taken ----------
+exports.testTakenByUsers = catchAsyncError(async(req,res,next)=>{
+  const totalTestTakenByUsers = await TestModel.find({}).sort({_id:-1}).countDocuments();
+  const testTakenByUsers = await TestModel.find({}).sort({_id:-1}).select("-answers");
+  return res.status(200).json({success:true,totalTestTakenByUsers,testTakenByUsers})
+})
+
+exports.viewTestTakenByUsers = catchAsyncError(async(req,res,next)=>{
+  const {id} = req.params;
+  if (!id) {
+    return next(new ErrorHandler(400,"Invalid I'd."));
+  }
+  const testTakenByUsers = await TestModel.find({_id:id});
+  if(!testTakenByUsers)
+    return next(new ErrorHandler(401,"Invalid I'd."));
+  return res.status(200).json({success:true,testTakenByUsers})
+})
