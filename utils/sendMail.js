@@ -40,7 +40,7 @@ exports.sendMarksMail = async (subjectName,userMailState,count,ansState,timeMinS
   let str = "";
   let totalMarks = 0;
   ansState.forEach((e)=>{
-    str+=`<div style="color:white;background-color: black;padding: 5px;">
+    str+=`<div style="color:black;padding: 5px;">
       <br/>
       <div><strong>Q.${e.questionNumber} &nbsp;&nbsp; ${e.questionName}</strong></div>
       <div>
@@ -61,7 +61,7 @@ exports.sendMarksMail = async (subjectName,userMailState,count,ansState,timeMinS
 
   const mailOptions = {
     from: process.env.SENDER_EMAIL,
-    to: userMailState,
+    to: String(userMailState),
     subject: `${subjectName} test result.`,
     html:`<h1>You Scored: &nbsp;${count}/${totalMarks}</h1>
           <h3>Time: ${timeMinState}:${timeSecState} sec</h3>
