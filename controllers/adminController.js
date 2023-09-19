@@ -45,11 +45,12 @@ exports.getsAdminDetails = catchAsyncError(async (req, res, next) => {
   const allAdminsCount = await AdminModel.countDocuments();
   const allUsersCount = await UserModel.countDocuments();
   const questionCount = await questionModels.countDocuments();
+  const totalTestCount = await TestModel.countDocuments();
   let adminData;
   if(admin.role === "admin"){
-    adminData = { admin, allAdminsCount, allUsersCount, questionCount };
+    adminData = { admin, allAdminsCount, allUsersCount, questionCount,totalTestCount };
   }else{
-    adminData = { admin, allAdminsCount:0, allUsersCount:0, questionCount };
+    adminData = { admin, allAdminsCount:0, allUsersCount:0, questionCount,totalTestCount:0 };
   }
   return res.status(200).json({ success: true, adminData });
 });
