@@ -44,11 +44,16 @@ exports.allSubjectsName = catchAsyncError(async (req, res, next) => {
   });
   const subjects = new Set(temp);
   const totalSubjects = [];
+  const countNoOfQuestions = [];
   for (let el of subjects) totalSubjects.push(el);
   const totalSubjectCount = totalSubjects.length;
+
+  for(let sub in totalSubjects)
+    countNoOfQuestions.push(await QuestionsModel.find({questionCategory:totalSubjects[sub]}).countDocuments());
+
   return res
     .status(200)
-    .json({ success: true, totalSubjectCount, totalSubjects });
+    .json({ success: true, totalSubjectCount, totalSubjects,countNoOfQuestions });
 });
 
 //  //! Search by subject name...
